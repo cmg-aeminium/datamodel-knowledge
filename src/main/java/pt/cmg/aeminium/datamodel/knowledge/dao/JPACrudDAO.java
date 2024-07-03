@@ -25,7 +25,7 @@ public abstract class JPACrudDAO<T> {
         this.entityClass = entityClass;
     }
 
-    @PersistenceContext(unitName = "knowledge-data")
+    @PersistenceContext(unitName = "aem-data")
     private EntityManager em;
 
     protected EntityManager getEntityManager() {
