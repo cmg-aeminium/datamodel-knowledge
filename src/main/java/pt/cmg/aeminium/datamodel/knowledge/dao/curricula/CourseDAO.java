@@ -2,16 +2,16 @@
  * Copyright (c) 2020 Carlos Gonçalves (https://www.linkedin.com/in/carlosmogoncalves/)
  * Likely open-source, so copy at will, bugs will be yours as well.
  */
-package pt.cmg.aeminium.knowledge.dao.schools;
+package pt.cmg.aeminium.datamodel.knowledge.dao.curricula;
 
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.TypedQuery;
-import org.apache.commons.lang3.StringUtils;
-import pt.cmg.aeminium.knowledge.dao.JPACrudDAO;
-import pt.cmg.aeminium.knowledge.persistence.entities.localisation.Language;
-import pt.cmg.aeminium.knowledge.persistence.entities.schools.Course;
-import pt.cmg.aeminium.knowledge.persistence.entities.schools.School;
+import pt.cmg.aeminium.datamodel.common.entities.localisation.Language;
+import pt.cmg.aeminium.datamodel.knowledge.dao.JPACrudDAO;
+import pt.cmg.aeminium.datamodel.knowledge.entities.curricula.Course;
+import pt.cmg.aeminium.datamodel.knowledge.entities.curricula.School;
 import pt.cmg.jakartautils.jpa.QueryUtils;
 
 /**

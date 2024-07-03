@@ -2,17 +2,17 @@
  * Copyright (c) 2020 Carlos Gonçalves (https://www.linkedin.com/in/carlosmogoncalves/)
  * Likely open-source, so copy at will, bugs will be yours as well.
  */
-package pt.cmg.aeminium.knowledge.dao;
+package pt.cmg.aeminium.datamodel.knowledge.dao;
 
 import java.util.Collection;
 import java.util.List;
+import org.jboss.weld.interceptor.util.proxy.TargetInstanceProxy;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
-import org.jboss.weld.interceptor.util.proxy.TargetInstanceProxy;
 
 /**
  * @author Carlos Manuel
