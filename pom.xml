@@ -85,16 +85,13 @@
         <rest-assured-json-schema-version>5.4.0</rest-assured-json-schema-version>
         <mock-ftpserver-version>2.8.0</mock-ftpserver-version>
 
+        <!-- Platform dependencies -->
+        <jakarta.jakartaee-api-version>10.0.0</jakarta.jakartaee-api-version>
+        <eclipselink-version>4.0.1.payara-p2</eclipselink-version>
+        <weld-version>5.0.1.Final</weld-version>
 
         <!-- 3rd party dependencies -->
-        <commons-codec-version>1.17.0</commons-codec-version>
         <commons-lang3-version>3.14.0</commons-lang3-version>
-        <coobird-thumbnailator-version>0.4.17</coobird-thumbnailator-version>
-        <drewnoakes-metadataextractor-version>2.18.0</drewnoakes-metadataextractor-version>
-        <jakarta.jakartaee-api-version>10.0.0</jakarta.jakartaee-api-version>
-        <microprofile-version>3.1</microprofile-version>
-        <jboss-weld-version>3.1.8.Final</jboss-weld-version>
-        <owasp-encoder-version>1.2.3</owasp-encoder-version>
         
          <!-- First party dependencies -->
         <aem-jakarta-utils-version>3.0.0</aem-jakarta-utils-version>
@@ -123,34 +120,17 @@
             <version>${jakarta.jakartaee-api-version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.microprofile.config</groupId>
-            <artifactId>microprofile-config-api</artifactId>
-            <version>${microprofile-version}</version>
-        </dependency>
         
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.core</artifactId>
-            <version>4.0.1.payara-p2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.jpa</artifactId>
-            <version>4.0.1.payara-p2</version>
+            <version>${eclipselink-version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-osgi-bundle</artifactId>
-            <version>5.0.1.Final</version>
-            <scope>provided</scope>
-        </dependency>
-         <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast</artifactId>
-            <version>5.3.6</version>
+            <version>${weld-version}</version>
             <scope>provided</scope>
         </dependency>
         
@@ -174,19 +154,9 @@
 
         <!-- 3rd party dependencies-->
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>${commons-codec-version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.owasp.encoder</groupId>
-            <artifactId>encoder</artifactId>
-            <version>${owasp-encoder-version}</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -322,10 +292,11 @@
                             <rules>
                                 <requireMavenVersion>
                                     <version>${maven-required-version}</version>
+                                    <message>Minimum Maven required version is ${maven-required-version}</message>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <version>${java-version}</version>
-                                    <message>Minimum JDK supported version is ${java-version}</message>
+                                    <message>Minimum JDK required version is ${java-version}</message>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
