@@ -1,0 +1,9 @@
+# Ignore maven target directories
+*/target/**
+
+# Eclipse configuration and bin files
+.project
+.settings
+.classpath
+target
+bin
