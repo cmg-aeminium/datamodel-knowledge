@@ -2,12 +2,16 @@
  * Copyright (c) 2024 Carlos Gonçalves (https://www.linkedin.com/in/carlosmogoncalves/)
  * Likely open-source, so copy at will, bugs will be yours as well.
  */
-package pt.cmg.aeminium.knowledge.persistence.entities.knowledgebodies;
+package pt.cmg.aeminium.datamodel.knowledge.entities.knowledgebodies;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.annotations.CacheCoordinationType;
+import org.eclipse.persistence.annotations.CacheType;
+import org.eclipse.persistence.config.CacheIsolationType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,11 +25,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.annotations.CacheCoordinationType;
-import org.eclipse.persistence.annotations.CacheType;
-import org.eclipse.persistence.config.CacheIsolationType;
-import pt.cmg.aeminium.knowledge.persistence.entities.identity.User;
+import pt.cmg.aeminium.datamodel.users.entities.identity.User;
 
 /**
  * @author Carlos Gonçalves

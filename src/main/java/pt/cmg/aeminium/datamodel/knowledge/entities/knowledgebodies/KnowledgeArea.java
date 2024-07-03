@@ -3,12 +3,16 @@
  * Carlos Gonçalves (https://www.linkedin.com/in/carlosmogoncalves/)
  * All rights reserved.
  */
-package pt.cmg.aeminium.knowledge.persistence.entities.knowledgebodies;
+package pt.cmg.aeminium.datamodel.knowledge.entities.knowledgebodies;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.annotations.CacheCoordinationType;
+import org.eclipse.persistence.annotations.CacheType;
+import org.eclipse.persistence.config.CacheIsolationType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,10 +26,6 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.annotations.CacheCoordinationType;
-import org.eclipse.persistence.annotations.CacheType;
-import org.eclipse.persistence.config.CacheIsolationType;
 
 @Entity
 @Table(name = "knowledgeareas")

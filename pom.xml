@@ -98,6 +98,8 @@
         
          <!-- First party dependencies -->
         <aem-jakarta-utils-version>3.0.0</aem-jakarta-utils-version>
+        <aem-datamodel-common-version>1.0.0</aem-datamodel-common-version>
+        <aem-datamodel-users-version>1.0.0</aem-datamodel-users-version>
 
     </properties>
 
@@ -157,6 +159,16 @@
             <groupId>pt.cmg</groupId>
             <artifactId>jakartautils</artifactId>
             <version>${aem-jakarta-utils-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>pt.cmg.aeminium</groupId>
+            <artifactId>datamodel-common</artifactId>
+            <version>${aem-datamodel-common-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>pt.cmg.aeminium</groupId>
+            <artifactId>datamodel-users</artifactId>
+            <version>${aem-datamodel-users-version}</version>
         </dependency>
 
 
