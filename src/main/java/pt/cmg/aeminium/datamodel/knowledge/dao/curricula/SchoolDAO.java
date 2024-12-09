@@ -5,6 +5,7 @@
 package pt.cmg.aeminium.datamodel.knowledge.dao.curricula;
 
 import java.util.List;
+import java.util.Set;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.TypedQuery;
 import pt.cmg.aeminium.datamodel.common.entities.localisation.Language;
@@ -21,6 +22,12 @@ public class SchoolDAO extends JPACrudDAO<School> {
     public SchoolDAO() {
         super(School.class);
     }
+
+    public record SchoolFilter(Set<Long> countryIds, Long size, Long offset) {
+        public boolean hasActiveFilter() {
+            return countryIds != null && !countryIds.isEmpty();
+        }
+    };
 
     public School findByName(Language language, String name) {
 
@@ -40,6 +47,36 @@ public class SchoolDAO extends JPACrudDAO<School> {
 
         List<School> results = QueryUtils.getResultListFromQuery(query);
         return results.isEmpty() ? null : results.getFirst();
+    }
+
+    public List<School> findByFiltered(SchoolFilter schoolFilter) {
+
+        TypedQuery<School> query = null;
+
+        StringBuilder select = new StringBuilder("SELECT s FROM School s ");
+        StringBuilder filter = new StringBuilder("");
+
+        if (!schoolFilter.countryIds().isEmpty()) {
+            filter.append("WHERE ");
+            filter.append("s.country.id IN :countryIds ");
+        }
+
+        String statement = select.append(filter).toString();
+        query = getEntityManager().createQuery(statement, School.class);
+
+        if (!schoolFilter.countryIds().isEmpty()) {
+            query.setParameter("countryIds", schoolFilter.countryIds());
+        }
+
+        if (schoolFilter.size() != null) {
+            query.setMaxResults(schoolFilter.size().intValue());
+        }
+
+        if (schoolFilter.offset() != null) {
+            query.setFirstResult(schoolFilter.offset().intValue());
+        }
+
+        return QueryUtils.getResultListFromQuery(query);
     }
 
 }
