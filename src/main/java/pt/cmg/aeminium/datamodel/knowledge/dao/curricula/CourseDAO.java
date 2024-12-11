@@ -11,7 +11,6 @@ import jakarta.persistence.TypedQuery;
 import pt.cmg.aeminium.datamodel.common.entities.localisation.Language;
 import pt.cmg.aeminium.datamodel.knowledge.dao.JPACrudDAO;
 import pt.cmg.aeminium.datamodel.knowledge.entities.curricula.Course;
-import pt.cmg.aeminium.datamodel.knowledge.entities.curricula.School;
 import pt.cmg.jakartautils.jpa.QueryUtils;
 
 /**
@@ -22,81 +21,92 @@ public class CourseDAO extends JPACrudDAO<Course> {
 
     private static final String BASE_SELECT_COURSE_QUERY = "SELECT c FROM Course c ";
 
-    public static final String AND = " AND ";
+    public static final String AND = "AND ";
 
     public CourseDAO() {
         super(Course.class);
     }
 
-    public static class CourseFilterCriteria {
-
-        public CourseFilterCriteria(School school, Integer year, String name, String acronym) {
-            super();
-            this.school = school;
-            this.year = year;
-            this.name = name;
-            this.acronym = acronym;
-        }
-
-        public School school;
-        public Integer year;
-        public String name;
-        public String acronym;
+    public record CourseFilterCriteria(
+        Long schoolId,
+        Integer year,
+        Language language,
+        String name,
+        String acronym,
+        Long size,
+        Long offset) {
     }
 
     /**
      * Searches for Degrees with some filtering criteria
      */
-    public List<Course> findFiltered(CourseFilterCriteria filterParameters) {
+    public List<Course> findFiltered(CourseFilterCriteria filter) {
 
         StringBuilder selectText = new StringBuilder(BASE_SELECT_COURSE_QUERY);
         StringBuilder filterText = new StringBuilder();
-        String prefix = " WHERE ";
+        String prefix = "WHERE ";
 
-        if (filterParameters.school != null) {
-            filterText.append(prefix).append("c.school = :school ");
+        if (filter.schoolId != null) {
+            filterText.append(prefix).append("c.school.id = :school ");
             prefix = AND;
         }
 
-        if (filterParameters.year != null) {
+        if (filter.year != null) {
             filterText.append(prefix).append("c.year = :year ");
             prefix = AND;
         }
 
-        if (StringUtils.isNotBlank(filterParameters.acronym)) {
+        if (StringUtils.isNotBlank(filter.acronym)) {
             filterText.append(prefix).append("c.acronym = :acronym ");
             prefix = AND;
         }
 
-        if (StringUtils.isNotBlank(filterParameters.name)) {
-            filterText.append(prefix).append("c.name = :name ");
+        if (StringUtils.isNotBlank(filter.name)) {
+            if (filter.language == null || filter.language.isDefaultLanguage()) {
+                filterText.append(prefix).append("c.nameTextContentId IN (SELECT t.id FROM TextContent t WHERE t.textValue = :name) ");
+            } else {
+                filterText.append(prefix).append("c.nameTextContentId IN (SELECT t.id FROM TranslatedText t WHERE t.textValue = :name AND t.language = :language) ");
+            }
+
             prefix = AND;
         }
 
         String queryText = selectText.append(filterText).toString();
         TypedQuery<Course> query = getEntityManager().createQuery(queryText, Course.class);
 
-        setDegreeQueryParameters(query, filterParameters);
+        setDegreeQueryParameters(query, filter);
+
+        if (filter.size() != null) {
+            query.setMaxResults(filter.size().intValue());
+        }
+
+        if (filter.offset() != null) {
+            query.setFirstResult(filter.offset().intValue());
+        }
 
         return query.getResultList();
     }
 
-    private void setDegreeQueryParameters(TypedQuery<Course> query, CourseFilterCriteria filterParameters) {
+    private void setDegreeQueryParameters(TypedQuery<Course> query, CourseFilterCriteria filter) {
 
-        if (filterParameters.school != null) {
-            query.setParameter("school", filterParameters.school);
+        if (filter.schoolId != null) {
+            query.setParameter("school", filter.schoolId);
         }
 
-        if (filterParameters.year != null) {
-            query.setParameter("year", filterParameters.year);
+        if (filter.year != null) {
+            query.setParameter("year", filter.year);
         }
 
-        if (StringUtils.isNotBlank(filterParameters.acronym)) {
-            query.setParameter("acronym", filterParameters.acronym);
+        if (StringUtils.isNotBlank(filter.acronym)) {
+            query.setParameter("acronym", filter.acronym);
         }
 
-        if (StringUtils.isNotBlank(filterParameters.name)) {
-            query.setParameter("name", filterParameters.name);
+        if (StringUtils.isNotBlank(filter.name)) {
+            query.setParameter("name", filter.name);
+        }
+
+        if (filter.language != null && !filter.language.isDefaultLanguage()) {
+            query.setParameter("language", filter.language());
         }
     }
 
