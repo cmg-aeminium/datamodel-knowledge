@@ -15,6 +15,7 @@ import pt.cmg.aeminium.datamodel.knowledge.entities.knowledgebodies.KnowledgeBod
 @Stateless
 public class KnowledgeBodyDAO extends JPACrudDAO<KnowledgeBody> {
 
+    private static final String WHERE = "WHERE ";
     private static final String AND = "AND ";
 
     public KnowledgeBodyDAO() {
@@ -35,7 +36,7 @@ public class KnowledgeBodyDAO extends JPACrudDAO<KnowledgeBody> {
 
         StringBuilder selectText = new StringBuilder("SELECT b FROM KnowledgeBody b ");
         StringBuilder filterText = new StringBuilder();
-        String prefix = "WHERE ";
+        String prefix = WHERE;
 
         if (filter.year != null) {
             filterText.append(prefix).append("b.year = :year ");
