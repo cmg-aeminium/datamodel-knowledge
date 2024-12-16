@@ -103,11 +103,13 @@ public class CourseDAO extends JPACrudDAO<Course> {
 
         if (StringUtils.isNotBlank(filter.name)) {
             query.setParameter("name", filter.name);
+
+            if (filter.language != null) {
+                query.setParameter("language", filter.language());
+            }
+
         }
 
-        if (filter.language != null && !filter.language.isDefaultLanguage()) {
-            query.setParameter("language", filter.language());
-        }
     }
 
     public Course findByName(Language language, String name) {
