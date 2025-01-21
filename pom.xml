@@ -7,7 +7,7 @@
 
     <groupId>pt.cmg.aeminium</groupId>
     <artifactId>datamodel-knowledge</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     
     <packaging>ejb</packaging>
 
@@ -93,9 +93,9 @@
         <commons-lang3-version>3.17.0</commons-lang3-version>
         
          <!-- First party dependencies -->
-        <aem-jakarta-utils-version>3.0.1</aem-jakarta-utils-version>
+        <aem-jakarta-utils-version>3.0.3</aem-jakarta-utils-version>
         <aem-datamodel-common-version>1.0.1</aem-datamodel-common-version>
-        <aem-datamodel-users-version>1.0.0</aem-datamodel-users-version>
+        <aem-datamodel-users-version>1.0.2</aem-datamodel-users-version>
 
     </properties>
 

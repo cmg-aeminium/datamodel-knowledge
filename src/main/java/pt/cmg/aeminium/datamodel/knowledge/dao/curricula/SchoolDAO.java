@@ -51,8 +51,6 @@ public class SchoolDAO extends JPACrudDAO<School> {
 
     public List<School> findByFiltered(SchoolFilter schoolFilter) {
 
-        TypedQuery<School> query = null;
-
         StringBuilder select = new StringBuilder("SELECT s FROM School s ");
         StringBuilder filter = new StringBuilder("");
 
@@ -62,7 +60,7 @@ public class SchoolDAO extends JPACrudDAO<School> {
         }
 
         String statement = select.append(filter).toString();
-        query = getEntityManager().createQuery(statement, School.class);
+        TypedQuery<School> query = getEntityManager().createQuery(statement, School.class);
 
         if (!schoolFilter.countryIds().isEmpty()) {
             query.setParameter("countryIds", schoolFilter.countryIds());
@@ -77,6 +75,26 @@ public class SchoolDAO extends JPACrudDAO<School> {
         }
 
         return QueryUtils.getResultListFromQuery(query);
+    }
+
+    public int countFiltered(SchoolFilter schoolFilter) {
+
+        StringBuilder select = new StringBuilder("SELECT COUNT(s) FROM School s ");
+        StringBuilder filter = new StringBuilder("");
+
+        if (!schoolFilter.countryIds().isEmpty()) {
+            filter.append("WHERE ");
+            filter.append("s.country.id IN :countryIds ");
+        }
+
+        String statement = select.append(filter).toString();
+        TypedQuery<Integer> query = getEntityManager().createQuery(statement, Integer.class);
+
+        if (!schoolFilter.countryIds().isEmpty()) {
+            query.setParameter("countryIds", schoolFilter.countryIds());
+        }
+
+        return QueryUtils.getIntResultFromQuery(query);
     }
 
 }

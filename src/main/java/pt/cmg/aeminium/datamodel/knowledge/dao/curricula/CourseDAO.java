@@ -20,6 +20,7 @@ import pt.cmg.jakartautils.jpa.QueryUtils;
 public class CourseDAO extends JPACrudDAO<Course> {
 
     private static final String BASE_SELECT_COURSE_QUERY = "SELECT c FROM Course c ";
+    private static final String BASE_COUNT_COURSE_QUERY = "SELECT COUNT(c) FROM Course c ";
 
     public static final String AND = "AND ";
 
@@ -42,7 +43,37 @@ public class CourseDAO extends JPACrudDAO<Course> {
      */
     public List<Course> findFiltered(CourseFilterCriteria filter) {
 
-        StringBuilder selectText = new StringBuilder(BASE_SELECT_COURSE_QUERY);
+        String queryText = filterQueryBuilder(BASE_SELECT_COURSE_QUERY, filter);
+
+        TypedQuery<Course> query = getEntityManager().createQuery(queryText, Course.class);
+
+        query = setFilterParameters(query, filter);
+
+        if (filter.size() != null) {
+            query.setMaxResults(filter.size().intValue());
+        }
+
+        if (filter.offset() != null) {
+            query.setFirstResult(filter.offset().intValue());
+        }
+
+        return QueryUtils.getResultListFromQuery(query);
+    }
+
+    public int countFiltered(CourseFilterCriteria filter) {
+
+        String queryText = filterQueryBuilder(BASE_COUNT_COURSE_QUERY, filter);
+
+        TypedQuery<Integer> query = getEntityManager().createQuery(queryText, Integer.class);
+
+        query = setFilterParameters(query, filter);
+
+        return QueryUtils.getIntResultFromQuery(query);
+    }
+
+    private String filterQueryBuilder(String baseSelectQuery, CourseFilterCriteria filter) {
+
+        StringBuilder selectText = new StringBuilder(baseSelectQuery);
         StringBuilder filterText = new StringBuilder();
         String prefix = "WHERE ";
 
@@ -71,23 +102,10 @@ public class CourseDAO extends JPACrudDAO<Course> {
             prefix = AND;
         }
 
-        String queryText = selectText.append(filterText).toString();
-        TypedQuery<Course> query = getEntityManager().createQuery(queryText, Course.class);
-
-        setDegreeQueryParameters(query, filter);
-
-        if (filter.size() != null) {
-            query.setMaxResults(filter.size().intValue());
-        }
-
-        if (filter.offset() != null) {
-            query.setFirstResult(filter.offset().intValue());
-        }
-
-        return query.getResultList();
+        return selectText.append(filterText).toString();
     }
 
-    private void setDegreeQueryParameters(TypedQuery<Course> query, CourseFilterCriteria filter) {
+    private <T> TypedQuery<T> setFilterParameters(TypedQuery<T> query, CourseFilterCriteria filter) {
 
         if (filter.schoolId != null) {
             query.setParameter("school", filter.schoolId);
@@ -107,9 +125,9 @@ public class CourseDAO extends JPACrudDAO<Course> {
             if (filter.language != null) {
                 query.setParameter("language", filter.language());
             }
-
         }
 
+        return query;
     }
 
     public Course findByName(Language language, String name) {

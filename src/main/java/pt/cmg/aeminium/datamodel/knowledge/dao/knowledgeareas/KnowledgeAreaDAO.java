@@ -7,9 +7,13 @@ import jakarta.persistence.TypedQuery;
 import pt.cmg.aeminium.datamodel.common.entities.localisation.Language;
 import pt.cmg.aeminium.datamodel.knowledge.dao.JPACrudDAO;
 import pt.cmg.aeminium.datamodel.knowledge.entities.knowledgebodies.KnowledgeArea;
+import pt.cmg.jakartautils.jpa.QueryUtils;
 
 @Stateless
 public class KnowledgeAreaDAO extends JPACrudDAO<KnowledgeArea> {
+
+    private static final String BASE_SELECT_KA_QUERY = "SELECT ka FROM KnowledgeArea ka ";
+    private static final String BASE_COUNT_KA_QUERY = "SELECT COUNT(ka) FROM KnowledgeArea ka ";
 
     private static final String WHERE = "WHERE ";
     private static final String AND = "AND ";
@@ -28,7 +32,36 @@ public class KnowledgeAreaDAO extends JPACrudDAO<KnowledgeArea> {
 
     public List<KnowledgeArea> findFiltered(KnowledgeAreaFilterCriteria filter) {
 
-        StringBuilder selectText = new StringBuilder("SELECT ka FROM KnowledgeArea ka ");
+        String queryText = filterQueryBuilder(BASE_SELECT_KA_QUERY, filter);
+        TypedQuery<KnowledgeArea> query = getEntityManager().createQuery(queryText, KnowledgeArea.class);
+
+        query = setFilterParameters(query, filter);
+
+        if (filter.size() != null) {
+            query.setMaxResults(filter.size().intValue());
+        }
+
+        if (filter.offset() != null) {
+            query.setFirstResult(filter.offset().intValue());
+        }
+
+        return QueryUtils.getResultListFromQuery(query);
+    }
+
+    public int countFiltered(KnowledgeAreaFilterCriteria filter) {
+
+        String queryText = filterQueryBuilder(BASE_COUNT_KA_QUERY, filter);
+
+        TypedQuery<Integer> query = getEntityManager().createQuery(queryText, Integer.class);
+
+        query = setFilterParameters(query, filter);
+
+        return QueryUtils.getIntResultFromQuery(query);
+    }
+
+    private String filterQueryBuilder(String baseSelectQuery, KnowledgeAreaFilterCriteria filter) {
+
+        StringBuilder selectText = new StringBuilder(baseSelectQuery);
         StringBuilder filterText = new StringBuilder();
         String prefix = WHERE;
 
@@ -47,8 +80,10 @@ public class KnowledgeAreaDAO extends JPACrudDAO<KnowledgeArea> {
             prefix = AND;
         }
 
-        String queryText = selectText.append(filterText).toString();
-        TypedQuery<KnowledgeArea> query = getEntityManager().createQuery(queryText, KnowledgeArea.class);
+        return selectText.append(filterText).toString();
+    }
+
+    private <T> TypedQuery<T> setFilterParameters(TypedQuery<T> query, KnowledgeAreaFilterCriteria filter) {
 
         if (filter.knowledgeBodyId != null) {
             query.setParameter("knowledgeBody", filter.knowledgeBodyId);
@@ -62,15 +97,7 @@ public class KnowledgeAreaDAO extends JPACrudDAO<KnowledgeArea> {
             }
         }
 
-        if (filter.size() != null) {
-            query.setMaxResults(filter.size().intValue());
-        }
-
-        if (filter.offset() != null) {
-            query.setFirstResult(filter.offset().intValue());
-        }
-
-        return query.getResultList();
+        return query;
     }
 
 }
